@@ -9,8 +9,6 @@ import io.undertow.servlet.api.ServletInfo;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
 
-import javax.net.ssl.SSLContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ public class UndertowServer {
 
         try {
 
-            SSLContext sslContext = SSLContext.getInstance("TLS");
+            //SSLContext sslContext = getSSLContext();
 
             DeploymentManager manager = defaultContainer().addDeployment(this.deploymentInfo);
             manager.deploy();
