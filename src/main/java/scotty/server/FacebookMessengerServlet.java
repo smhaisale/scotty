@@ -1,9 +1,13 @@
-package scotty.servlet;
+package scotty.server;
 
 import com.github.messenger4j.MessengerPlatform;
 import com.github.messenger4j.receive.MessengerReceiveClient;
 import com.github.messenger4j.send.MessengerSendClient;
-import scotty.common.HttpUtils;
+
+import scotty.manager.WozReviewManager;
+import scotty.util.HttpUtils;
+import scotty.dao.ChatbotServiceDao;
+import scotty.dao.DialogHistoryDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,23 +17,16 @@ import java.io.IOException;
 
 import static scotty.common.Config.*;
 
-public class WebhookServlet extends HttpServlet {
+public class FacebookMessengerServlet extends HttpServlet {
+
+    private WozReviewManager manager = new WozReviewManager();
+
+    private MessengerSendClient sendClient = MessengerPlatform.newSendClientBuilder(SCOTTY_PAGE_ACCESS_TOKEN).build();
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        System.out.println(request.getQueryString());
-        System.out.println(request.getRequestURL());
-        System.out.println(request.getPathTranslated());
-
-        for(String param: request.getParameterMap().keySet()) {
-            System.out.println(param + "\t" + request.getParameter(param));
-        }
-
-        String token = request.getParameter("hub.verify_token");
-        //if (token != null && token.equals(SCOTTY_FB_TOKEN))
         HttpUtils.writeText(response, request.getParameter("hub.challenge"));
     }
 
@@ -42,14 +39,29 @@ public class WebhookServlet extends HttpServlet {
         String signature = request.getHeader("X-Hub-Signature");
 
         try {
-            MessengerSendClient sendClient = MessengerPlatform.newSendClientBuilder(SCOTTY_PAGE_ACCESS_TOKEN).build();
 
             MessengerReceiveClient receiveClient = MessengerPlatform.newReceiveClientBuilder(SCOTTY_APP_SECRET, SCOTTY_MESSENGER_TOKEN)
                     .onTextMessageEvent(event ->  {
+
                         try {
-                            sendClient.sendTextMessage(event.getSender().getId(), event.getText());
+                            String userId = event.getSender().getId();
+                            String text = event.getText();
+
+                            System.out.println("Received\t" + userId + "\t" + text);
+
+                            String reply = ChatbotServiceDao.getReply(userId, text, DialogHistoryDao.get(userId));
+
+                            DialogHistoryDao.add(userId, text);
+                            DialogHistoryDao.add(userId, reply);
+
+                            reply = manager.review(userId, text, reply);
+
+                            System.out.println("Replying with\t" + reply);
+
+                            sendClient.sendTextMessage(userId, reply);
+
                         } catch (Exception e) {
-                            ;//
+
                         }
                     })
                     .build();

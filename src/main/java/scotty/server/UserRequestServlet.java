@@ -1,7 +1,6 @@
-package scotty.servlet;
+package scotty.server;
 
-import scotty.common.HttpUtils;
-import scotty.database.WozReview;
+import scotty.util.HttpUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,12 +23,12 @@ public class UserRequestServlet extends HttpServlet {
 
         try {
             String query = request.getParameter("query");
-            String answer = HttpUtils.remoteGet(CHATBOT_ADDRESS + "?query=" + query);
-            WozReview.put(query, answer);
+            String answer = HttpUtils.doGet(CHATBOT_ADDRESS + "?query=" + query);
+            //WozReview.put(query, answer);
 
             Thread.sleep(WOZ_WAIT_TIMEOUT);
 
-            HttpUtils.writeText(response, WozReview.delete(query));
+            //HttpUtils.writeText(response, WozReview.delete(query));
 
         } catch (Exception e) {
             e.printStackTrace();

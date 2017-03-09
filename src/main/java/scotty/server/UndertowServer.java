@@ -45,9 +45,6 @@ public class UndertowServer {
     public void start(Integer port) {
 
         try {
-
-            //SSLContext sslContext = getSSLContext();
-
             DeploymentManager manager = defaultContainer().addDeployment(this.deploymentInfo);
             manager.deploy();
 

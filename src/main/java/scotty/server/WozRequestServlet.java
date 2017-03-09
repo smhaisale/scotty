@@ -1,7 +1,9 @@
-package scotty.servlet;
+package scotty.server;
 
-import scotty.common.HttpUtils;
-import scotty.database.WozReview;
+import org.json.simple.JSONArray;
+import scotty.dao.WozReviewDao;
+import scotty.manager.WozReviewManager;
+import scotty.util.HttpUtils;
 import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
@@ -9,9 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
-
-import static scotty.common.Config.CHATBOT_ADDRESS;
 
 public class WozRequestServlet extends HttpServlet {
 
@@ -23,12 +24,11 @@ public class WozRequestServlet extends HttpServlet {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST");
 
-        Map<String, String> map = WozReview.get();
+        List list = WozReviewManager.getAll();
 
-        //IMPORTANT: only works for Map<String, String>
-        JSONObject json = new JSONObject(map);
+        //JSONObject json = new JSONObject(list);
 
-        HttpUtils.writeJSON(response, json);
+        //HttpUtils.writeJSON(response, json);
     }
 
     /**
@@ -36,14 +36,12 @@ public class WozRequestServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        String userId = request.getParameter("userId");
         String query = request.getParameter("query");
         String answer = request.getParameter("answer");
 
-        WozReview.put(query, answer);
+        //WozReviewDao.put(userId, query, answer);
 
         //TODO: Somehow wake up waiting user thread.
-
-        String url = CHATBOT_ADDRESS + "?query=" + query + "&answer=" + answer;
-        HttpUtils.remotePost(url);
     }
 }

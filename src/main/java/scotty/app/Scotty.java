@@ -1,16 +1,13 @@
 package scotty.app;
 
-import scotty.servlet.MirrorServlet;
-import scotty.servlet.UserRequestServlet;
-import scotty.servlet.WebhookServlet;
-import scotty.servlet.WozRequestServlet;
+import scotty.server.UserRequestServlet;
+import scotty.server.FacebookMessengerServlet;
 import scotty.server.UndertowServer;
+import scotty.server.WozRequestServlet;
 
 import javax.servlet.http.HttpServlet;
 import java.util.HashMap;
 import java.util.Map;
-
-import static scotty.common.Config.CHATBOT_PORT;
 
 public class Scotty {
 
@@ -21,7 +18,8 @@ public class Scotty {
 
         Map <String, Class <? extends HttpServlet>> pathServletMap = new HashMap<>();
         pathServletMap.put("user", UserRequestServlet.class);
-        pathServletMap.put("webhook", WebhookServlet.class);
+        pathServletMap.put("webhook", FacebookMessengerServlet.class);
+        pathServletMap.put("woz", WozRequestServlet.class);
 
         UndertowServer userServer = new UndertowServer(pathServletMap);
         userServer.start(USER_PORT);
