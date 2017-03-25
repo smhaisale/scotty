@@ -22,7 +22,21 @@ public class UserInformationManager {
         UserInformation user = UserIdentifierDao.getByFacebookId(facebookId);
 
         if (user == null) {
-            user = UserIdentifierDao.create(facebookId, null, null);
+            user = UserIdentifierDao.create();
+            user.setFacebookUserId(facebookId);
+            UserIdentifierDao.put(user);
+        }
+
+        return user.getUserId();
+    }
+
+    public static String getUserIdByWechatId(String wechatId) {
+        UserInformation user = UserIdentifierDao.getByWechatId(wechatId);
+
+        if (user == null) {
+            user = UserIdentifierDao.create();
+            user.setWechatUserId(wechatId);
+            UserIdentifierDao.put(user);
         }
 
         return user.getUserId();
@@ -32,7 +46,9 @@ public class UserInformationManager {
         UserInformation user = UserIdentifierDao.getByAmazonId(amazonId);
 
         if (user == null) {
-            user = UserIdentifierDao.create(null, amazonId, null);
+            user = UserIdentifierDao.create();
+            user.setAmazonUserId(amazonId);
+            UserIdentifierDao.put(user);
         }
 
         return user.getUserId();

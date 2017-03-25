@@ -14,11 +14,14 @@ public class FacebookMessengerController {
 
     @RequestMapping(method = {RequestMethod.POST})
     public String message(@RequestBody String payload, @RequestHeader(name = "X-Hub-Signature") String signature) {
-        try {
-            RECEIVE_CLIENT.processCallbackPayload(payload, signature);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new Thread( () -> {
+            try {
+                RECEIVE_CLIENT.processCallbackPayload(payload,signature);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         return "";  // Required to stop FB from resending the message over and over again.
     }
 }

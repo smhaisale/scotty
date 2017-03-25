@@ -21,6 +21,7 @@ public class UserIdentifierDao {
     private static final String FACEBOOK_USER_ID_FIELD = "facebook_user_id";
     private static final String AMAZON_USER_ID_FIELD = "amazon_user_id";
     private static final String SLACK_USER_ID_FIELD = "slack_user_id";
+    private static final String WECHAT_USER_ID_FIELD = "wechat_user_id";
 
     private static MongoDb database = new MongoDb("54.175.153.240", 27017, "scotty");
 
@@ -54,6 +55,19 @@ public class UserIdentifierDao {
         map.put(SLACK_USER_ID_FIELD, information.getSlackUserId());
 
         return map;
+    }
+
+    public static UserInformation create() {
+        String userId = UUID.randomUUID().toString();
+
+        if (log) {
+            SystemUtils.log("UserIdentifierDao", "Create user information for new user " + userId);
+        }
+
+        UserInformation user = new UserInformation();
+        put(user);
+
+        return user;
     }
 
     public static UserInformation create(String facebookId, String amazonId, String slackId) {
@@ -94,6 +108,11 @@ public class UserIdentifierDao {
 
     public static UserInformation getByAmazonId(String amazonId) {
         Map map = database.findOne(table, AMAZON_USER_ID_FIELD, amazonId);
+        return fromMap(map);
+    }
+
+    public static UserInformation getByWechatId(String wechatId) {
+        Map map = database.findOne(table, WECHAT_USER_ID_FIELD, wechatId);
         return fromMap(map);
     }
 

@@ -31,7 +31,7 @@ public class WeChatController {
             String text = root.getChild("Content").getText();
 
             new Thread( () -> {
-                String userId = UserInformationManager.getUserIdByFacebookId(wechatId);
+                String userId = UserInformationManager.getUserIdByWechatId(wechatId);
 
                 DialogHistoryManager.addEntry(userId, "wechat", text);
 
