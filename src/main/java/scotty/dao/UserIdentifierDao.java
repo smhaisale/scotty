@@ -65,6 +65,7 @@ public class UserIdentifierDao {
         }
 
         UserInformation user = new UserInformation();
+        user.setUserId(userId);
         put(user);
 
         return user;
