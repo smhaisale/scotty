@@ -37,6 +37,7 @@ public class UserIdentifierDao {
         information.setFacebookUserId((String) map.get(FACEBOOK_USER_ID_FIELD));
         information.setAmazonUserId((String) map.get(AMAZON_USER_ID_FIELD));
         information.setSlackUserId((String) map.get(SLACK_USER_ID_FIELD));
+        information.setWechatUserId((String) map.get(WECHAT_USER_ID_FIELD));
 
         return information;
     }
@@ -53,6 +54,7 @@ public class UserIdentifierDao {
         map.put(FACEBOOK_USER_ID_FIELD, information.getFacebookUserId());
         map.put(AMAZON_USER_ID_FIELD, information.getAmazonUserId());
         map.put(SLACK_USER_ID_FIELD, information.getSlackUserId());
+        map.put(WECHAT_USER_ID_FIELD, information.getWechatUserId());
 
         return map;
     }
@@ -65,6 +67,7 @@ public class UserIdentifierDao {
         }
 
         UserInformation user = new UserInformation();
+        user.setUserId(userId);
         put(user);
 
         return user;
