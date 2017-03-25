@@ -1,0 +1,8 @@
+curl -X POST -H "Content-Type: application/json" -d '{
+  "recipient": {
+    "id": "1304816102937436"
+  },
+  "message": {
+    "text": "hello, world!"
+  }
+}' "https://graph.facebook.com/v2.8/me/messages?access_token=EAADrttEWnbcBALEnNKEUz6UZAvtpz883IyAmXTbMGYBN0yi4F82btIAWJRoQSXY2P1t8fTPFznJVlZAiQTbI7P5OhDrIOI8caLRINrDb0Rs3RLtC8lr1CXVkfhm1PjJ9xgH5dxruNZAUQqD6rsYxEU2tvDsf3ZCM6XxBzRCvFAZDZD"

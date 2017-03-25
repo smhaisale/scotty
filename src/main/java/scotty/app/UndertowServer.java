@@ -1,4 +1,4 @@
-package scotty.server;
+package scotty.app;
 
 import io.undertow.Handlers;
 import io.undertow.Undertow;

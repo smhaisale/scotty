@@ -1,20 +1,17 @@
-package scotty.server;
+package scotty.servlet;
 
-import org.json.simple.JSONArray;
-import scotty.dao.WozReviewDao;
-import scotty.manager.WozReviewManager;
 import scotty.util.HttpUtils;
-import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
-public class WozRequestServlet extends HttpServlet {
+import static scotty.common.Config.CHATBOT_ADDRESS;
+import static scotty.common.Config.WOZ_WAIT_TIMEOUT;
+
+public class UserRequestServlet extends HttpServlet {
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,24 +21,26 @@ public class WozRequestServlet extends HttpServlet {
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST");
 
-        List list = WozReviewManager.getAll();
+        try {
+            String query = request.getParameter("query");
+            String answer = HttpUtils.doGet(CHATBOT_ADDRESS + "?query=" + query);
+            //DialogReview.put(query, answer);
 
-        //JSONObject json = new JSONObject(list);
+            Thread.sleep(WOZ_WAIT_TIMEOUT);
 
-        //HttpUtils.writeJSON(response, json);
+            //HttpUtils.writeText(response, DialogReview.delete(query));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String userId = request.getParameter("userId");
-        String query = request.getParameter("query");
-        String answer = request.getParameter("answer");
-
-        //WozReviewDao.put(userId, query, answer);
-
-        //TODO: Somehow wake up waiting user thread.
+        doGet(request, response);
     }
+
 }

@@ -1,8 +1,8 @@
 package scotty.dao;
 
-import com.google.common.collect.ImmutableMap;
-import scotty.common.WozReview;
-import scotty.util.MongoDbUtils;
+import com.google.common.collect.ImmutableList;
+import scotty.common.DialogReview;
+import scotty.util.MongoDb;
 import scotty.util.SystemUtils;
 
 import java.util.ArrayList;
@@ -22,21 +22,21 @@ public class WozReviewDao {
     private static final String SELECTED_RESPONSE_FIELD = "selected_response";
     private static final String IS_REVIEWED_FIELD = "is_reviewed";
 
-    private static MongoDbUtils database = new MongoDbUtils("localhost", 27017, "scotty");
+    private static MongoDb database = new MongoDb("54.175.153.240", 27017, "scotty");
 
-    private static WozReview fromMap(Map map) {
-        WozReview review = new WozReview();
+    private static DialogReview fromMap(Map map) {
+        DialogReview review = new DialogReview();
 
         review.setUserId((String) map.get(USER_ID_FIELD));
         review.setQuery((String) map.get(QUERY_FIELD));
-        review.setResponses((Map) map.get(RESPONSES_FIELD));
+        review.setResponses((List) map.get(RESPONSES_FIELD));
         review.setSelectedResponse((String) map.get(SELECTED_RESPONSE_FIELD));
         review.setReviewed((Boolean) map.get(IS_REVIEWED_FIELD));
 
         return review;
     }
 
-    private static Map toMap(WozReview review) {
+    public static Map toMap(DialogReview review) {
         Map<String, Object> map = new HashMap<>();
 
         map.put(USER_ID_FIELD, review.getUserId());
@@ -48,10 +48,10 @@ public class WozReviewDao {
         return map;
     }
 
-    public static WozReview get(String userId) {
+    public static DialogReview get(String userId) {
 
         if (log) {
-            SystemUtils.log(WozReviewDao.class, "Get woz review for " + userId);
+            SystemUtils.log("WozReviewDao", "Get woz review for " + userId);
         }
 
         Map<String, String> map = database.findOne(TABLE, userId);
@@ -59,14 +59,14 @@ public class WozReviewDao {
         return fromMap(map);
     }
 
-    public static List<WozReview> getAll() {
+    public static List<DialogReview> getAll() {
 
         if (log) {
-            SystemUtils.log(WozReviewDao.class, "Get all woz reviews");
+            SystemUtils.log("WozReviewDao", "Get all woz reviews");
         }
 
         List<Map> maps = database.findAll(TABLE);
-        List<WozReview> results = new ArrayList<>();
+        List<DialogReview> results = new ArrayList<>();
 
         for(Map map : maps) {
             results.add(fromMap(map));
@@ -74,10 +74,10 @@ public class WozReviewDao {
         return results;
     }
 
-    public static void put(WozReview review) {
+    public static void put(DialogReview review) {
 
         if (log) {
-            SystemUtils.log(WozReviewDao.class, "Put woz review " + review);
+            SystemUtils.log("WozReviewDao", "Put woz review " + review);
         }
 
         database.insert(TABLE, review.getUserId(), toMap(review));
@@ -86,7 +86,7 @@ public class WozReviewDao {
     public static void delete(String userId) {
 
         if (log) {
-            SystemUtils.log(WozReviewDao.class, "Delete woz review for " + userId);
+            SystemUtils.log("WozReviewDao", "Delete woz review for " + userId);
         }
 
         database.remove(TABLE, userId);
@@ -94,19 +94,19 @@ public class WozReviewDao {
 
     public static void main(String[] args) {
 
-        WozReview review = new WozReview();
+        DialogReview review = new DialogReview();
 
-        String response1 = "This is response option 1";
-        String response2 = "This is response option 2";
-        String response3 = "This is response option 3";
+        String response1 = "This is response option 1.";
+        String response2 = "This is response option 2.";
+        String response3 = "This is response option 3.";
 
-        Map<String, Integer> responses = ImmutableMap.of(response3, 3, response2, 2, response1, 1);
+        List<String> responses = ImmutableList.of(response3, response2, response1);
 
         review.setUserId("user0123");
         review.setQuery("Is this the query?");
-        review.setSelectedResponse("This is the selected response");
+        review.setSelectedResponse("This is the selected response.");
         review.setResponses(responses);
-        review.setReviewed(true);
+        review.setReviewed(null);
 
         System.out.println(review);
 

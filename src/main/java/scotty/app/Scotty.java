@@ -1,9 +1,6 @@
 package scotty.app;
 
-import scotty.server.UserRequestServlet;
-import scotty.server.FacebookMessengerServlet;
-import scotty.server.UndertowServer;
-import scotty.server.WozRequestServlet;
+import scotty.servlet.*;
 
 import javax.servlet.http.HttpServlet;
 import java.util.HashMap;
@@ -18,7 +15,9 @@ public class Scotty {
 
         Map <String, Class <? extends HttpServlet>> pathServletMap = new HashMap<>();
         pathServletMap.put("user", UserRequestServlet.class);
-        pathServletMap.put("webhook", FacebookMessengerServlet.class);
+        pathServletMap.put("webhook", MessengerServlet.class);
+        pathServletMap.put("alexa", AlexaServlet.class);
+        pathServletMap.put("wechat", WeChatServlet.class);
         pathServletMap.put("woz", WozRequestServlet.class);
 
         UndertowServer userServer = new UndertowServer(pathServletMap);

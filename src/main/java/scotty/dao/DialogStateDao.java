@@ -1,6 +1,6 @@
 package scotty.dao;
 
-import scotty.util.MongoDbUtils;
+import scotty.util.MongoDb;
 import scotty.util.SystemUtils;
 
 import java.util.HashMap;
@@ -13,15 +13,15 @@ public class DialogStateDao {
     private static final String table = "bot_context";
     private static final String field = "dialog_state";
 
-    private static MongoDbUtils contextDB = new MongoDbUtils("localhost", 27017, "scotty");
+    private static MongoDb database = new MongoDb("54.175.153.240", 27017, "scotty");
 
     public static String get(String userId) {
 
         if (log) {
-            SystemUtils.log(DialogStateDao.class, "Get dialog state for " + userId);
+            SystemUtils.log("DialogStateDao", "Get dialog state for " + userId);
         }
 
-        Map<String, String> map = contextDB.findOne(table, userId);
+        Map<String, String> map = database.findOne(table, userId);
 
         String state = map.get(field);
 
@@ -31,13 +31,13 @@ public class DialogStateDao {
     public static void put(String userId, String state) {
 
         if (log) {
-            SystemUtils.log(DialogStateDao.class, "Put dialog state " + state + " for " + userId);
+            SystemUtils.log("DialogStateDao", "Put dialog state for " + userId);
         }
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put(field, state);
 
-        contextDB.insert(table, userId, map);
+        database.insert(table, userId, map);
     }
 
     public static void main(String[] args) {

@@ -1,14 +1,13 @@
 package scotty.util;
 
 import com.mongodb.*;
-import com.mongodb.util.JSON;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MongoDbUtils {
+public class MongoDb {
 
     private static final String PRIMARY_INDEX_FIELD = "_id";
 
@@ -21,7 +20,7 @@ public class MongoDbUtils {
     private MongoClient client = null;
     private DB db = null;
 
-    public MongoDbUtils(String host, Integer port, String database) {
+    public MongoDb(String host, Integer port, String database) {
         this.database = database;
         this.host = host;
         this.port = port;
@@ -43,15 +42,17 @@ public class MongoDbUtils {
     public MongoClient authenticate(String username, String password) {
 
         this.db = client.getDB(database);
-        boolean auth = db.authenticate(username, password.toCharArray());
 
-        return auth ? client : null;
+        //boolean auth = db.authenticate(username, password.toCharArray());
+        //return auth ? client : null;
+
+        return client;
     }
 
     public void insert(String table, String key, Map<String, Object> fields) {
 
         if (log) {
-            SystemUtils.log(this, "Trying to insert record " + key + " in table " + table);
+            SystemUtils.log(this.getClass().getName(), "Trying to insert record " + key + " in table " + table);
         }
 
         DBCollection collection = db.getCollection(table);
@@ -70,7 +71,7 @@ public class MongoDbUtils {
     public Map findOne(String table, String key) {
 
         if (log) {
-            SystemUtils.log(this, "Trying to findOne record " + key + " in table " + table);
+            SystemUtils.log(this.getClass().getName(), "Trying to findOne record " + key + " in table " + table);
         }
 
         DBCollection collection = db.getCollection(table);
@@ -90,14 +91,14 @@ public class MongoDbUtils {
     public Map findOne(String table, String field, String value) {
 
         if (log) {
-            SystemUtils.log(this, "Trying to find record with " + field + ":" + value + " in table " + table);
+            SystemUtils.log(this.getClass().getName(), "Trying to find record with " + field + ":" + value + " in table " + table);
         }
 
         DBCollection collection = db.getCollection(table);
 
         BasicDBObject query = new BasicDBObject();
         BasicDBObject fieldObject = new BasicDBObject();
-        fieldObject.put(field, value);
+        query.put(field, value);
 
         DBCursor cursor = collection.find(query,fieldObject);
         if (cursor.hasNext()) {
@@ -110,7 +111,7 @@ public class MongoDbUtils {
     public List<Map> findAll(String table) {
 
         if (log) {
-            SystemUtils.log(this, "Trying to find all records in table " + table);
+            SystemUtils.log(this.getClass().getName(), "Trying to find all records in table " + table);
         }
 
         DBCollection collection = db.getCollection(table);
@@ -130,7 +131,7 @@ public class MongoDbUtils {
     public void remove(String table, String key) {
 
         if (log) {
-            SystemUtils.log(this, "Trying to insert record " + key + " in table " + table);
+            SystemUtils.log(this.getClass().getName(), "Trying to delete record " + key + " in table " + table);
         }
 
         DBCollection collection = db.getCollection(table);
@@ -139,4 +140,19 @@ public class MongoDbUtils {
         object.put(PRIMARY_INDEX_FIELD, key);
         collection.remove(object);
     }
+
+    public static String sanitizeInput(String input) {
+        if (input == null) {
+            return null;
+        }
+        return input.replaceAll(".", "\\uff0E");
+    }
+
+    public static String sanitizeOutput(String output) {
+        if (output == null) {
+            return null;
+        }
+        return output.replaceAll("\\uff0E", ".");
+    }
+
 }

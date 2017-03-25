@@ -22,7 +22,7 @@ public class HttpUtils {
     public static String getRequestBody(HttpServletRequest request) throws IOException {
 
         if (log) {
-            SystemUtils.log(new HttpUtils(), "Get request body for " + request);
+            SystemUtils.log("HttpUtils", "Get request body for " + request);
         }
 
         String body = null;
@@ -61,7 +61,7 @@ public class HttpUtils {
     public static String doGet(String urlAddress) throws IOException {
 
         if (log) {
-            SystemUtils.log(new HttpUtils(), "Do review request for " + urlAddress);
+            SystemUtils.log("HttpUtils", "Do review request for " + urlAddress);
         }
 
         StringBuilder result = new StringBuilder();
@@ -81,7 +81,7 @@ public class HttpUtils {
     public static String doPost(String urlAddress) throws IOException {
 
         if (log) {
-            SystemUtils.log(new HttpUtils(), "Do post request for " + urlAddress);
+            SystemUtils.log("HttpUtils", "Do post request for " + urlAddress);
         }
 
         StringBuilder result = new StringBuilder();
@@ -100,7 +100,7 @@ public class HttpUtils {
     public static String doPostWithParams(String requestURL, HashMap<String, String> postDataParams) {
 
         if (log) {
-            SystemUtils.log(new HttpUtils(), "Do post request for " + requestURL + " with params " + postDataParams);
+            SystemUtils.log("HttpUtils", "Do post request for " + requestURL + " with params " + postDataParams);
         }
 
         URL url;
@@ -146,9 +146,11 @@ public class HttpUtils {
     private static void write(HttpServletResponse response, String text) throws IOException {
 
         PrintWriter out = response.getWriter();
+
         if (text != null) {
             out.print(text);
         }
+
         out.flush();
         out.close();
     }
@@ -156,13 +158,15 @@ public class HttpUtils {
     public static void writeJSON(HttpServletResponse response, JSONObject json) throws IOException {
 
         if (log) {
-            SystemUtils.log(new HttpUtils(), "Write JSON " + json + " to " + response);
+            SystemUtils.log("HttpUtils", "Write JSON " + json + " to " + response);
         }
 
         response.setStatus(200);
         response.setContentType("application/json;charset=UTF-8");
 
-        json.writeJSONString(response.getWriter());
+        if (json != null) {
+            json.writeJSONString(response.getWriter());
+        }
 
         write(response, null);
     }
@@ -170,7 +174,7 @@ public class HttpUtils {
     public static void writeText(HttpServletResponse response, String text) throws IOException {
 
         if (log) {
-            SystemUtils.log(new HttpUtils(), "Write text " + text + " to " + response);
+            SystemUtils.log("HttpUtils", "Write text " + text + " to " + response);
         }
 
         response.setStatus(200);

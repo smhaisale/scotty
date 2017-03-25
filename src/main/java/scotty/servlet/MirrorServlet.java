@@ -1,4 +1,4 @@
-package scotty.server;
+package scotty.servlet;
 
 import scotty.util.HttpUtils;
 

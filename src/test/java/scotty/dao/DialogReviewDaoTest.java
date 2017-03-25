@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Created by shahbaaz on 3/8/17.
  */
-public class WozReviewDaoTest {
+public class DialogReviewDaoTest {
     @Test
     public void get() throws Exception {
 

@@ -1,7 +1,7 @@
 package scotty.common;
 
 /**
- * Concept of a user in the scotty system.
+ * All user information in the scotty system.
  */
 public class UserInformation {
 
@@ -9,6 +9,7 @@ public class UserInformation {
     private String facebookUserId;
     private String amazonUserId;
     private String slackUserId;
+    private String wechatUserId;
 
     public String getUserId() {
         return userId;
@@ -41,4 +42,13 @@ public class UserInformation {
     public void setSlackUserId(String slackUserId) {
         this.slackUserId = slackUserId;
     }
+
+    public String getWechatUserId() {
+        return wechatUserId;
+    }
+
+    public void setWechatUserId(String wechatUserId) {
+        this.wechatUserId = wechatUserId;
+    }
+
 }

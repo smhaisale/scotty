@@ -1,7 +1,7 @@
 package scotty.dao;
 
 import scotty.common.UserInformation;
-import scotty.util.MongoDbUtils;
+import scotty.util.MongoDb;
 import scotty.util.SystemUtils;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Used to access all user information stored in this system (scotty).
  */
-public class UserInformationDao {
+public class UserIdentifierDao {
 
     private static final boolean log = true;
 
@@ -22,7 +22,7 @@ public class UserInformationDao {
     private static final String AMAZON_USER_ID_FIELD = "amazon_user_id";
     private static final String SLACK_USER_ID_FIELD = "slack_user_id";
 
-    private static MongoDbUtils database = new MongoDbUtils("localhost", 27017, "scotty");
+    private static MongoDb database = new MongoDb("54.175.153.240", 27017, "scotty");
 
     private static UserInformation fromMap(Map map) {
 
@@ -61,7 +61,7 @@ public class UserInformationDao {
         String userId = UUID.randomUUID().toString();
 
         if (log) {
-            SystemUtils.log(UserInformationDao.class, "Create user information for new user " + userId);
+            SystemUtils.log("UserIdentifierDao", "Create user information for new user " + userId);
         }
 
         UserInformation user = new UserInformation();
@@ -79,7 +79,7 @@ public class UserInformationDao {
     public static UserInformation get(String userId) {
 
         if (log) {
-            SystemUtils.log(UserInformationDao.class, "Get user information for " + userId);
+            SystemUtils.log("UserIdentifierDao", "Get user information for " + userId);
         }
 
         Map<String, String> map = database.findOne(table, userId);
@@ -92,14 +92,32 @@ public class UserInformationDao {
         return fromMap(map);
     }
 
+    public static UserInformation getByAmazonId(String amazonId) {
+        Map map = database.findOne(table, AMAZON_USER_ID_FIELD, amazonId);
+        return fromMap(map);
+    }
+
     public static void put(UserInformation information) {
 
         String userId = information.getUserId();
 
         if (log) {
-            SystemUtils.log(UserInformationDao.class, "Put user information " + information + " for " + userId);
+            SystemUtils.log("UserIdentifierDao", "Put user information " + information + " for " + userId);
         }
 
         database.insert(table, information.getUserId(), toMap(information));
+    }
+
+    public static void main(String[] args) {
+        UserInformation user1 = create("facebook1", "amazon", "slack");
+        UserInformation user2 = create("facebook2", null, null);
+        UserInformation user3 = create(null, null, null);
+
+        System.out.println(get(user1.getUserId()));
+        System.out.println(get(user2.getUserId()));
+        System.out.println(get(user3.getUserId()));
+
+        System.out.println(getByFacebookId("facebook2"));
+        System.out.println(getByAmazonId("amazon"));
     }
 }

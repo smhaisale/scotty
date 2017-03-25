@@ -1,7 +1,6 @@
 package scotty.app;
 
-import scotty.server.UndertowServer;
-import scotty.server.WozRequestServlet;
+import scotty.servlet.WozRequestServlet;
 
 import javax.servlet.http.HttpServlet;
 import java.util.HashMap;

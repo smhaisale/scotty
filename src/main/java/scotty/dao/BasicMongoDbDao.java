@@ -1,9 +1,11 @@
 package scotty.dao;
 
-import scotty.util.MongoDbUtils;
+import scotty.util.MongoDb;
 import scotty.util.SystemUtils;
 
 import java.util.Map;
+
+import static scotty.common.Config.DATABASE;
 
 public abstract class BasicMongoDbDao {
 
@@ -11,12 +13,12 @@ public abstract class BasicMongoDbDao {
 
     private static final String table = "table";
 
-    private static MongoDbUtils database = new MongoDbUtils("localhost", 27017, "scotty");
+    private static MongoDb database = DATABASE;
 
     public static Map<String, Object> get(String key) {
 
         if (log) {
-            SystemUtils.log(BasicMongoDbDao.class, "Get value for " + key);
+            SystemUtils.log("BasicMongoDbDao", "Get value for " + key);
         }
 
         Map<String, Object> map = database.findOne(table, key);
@@ -27,7 +29,7 @@ public abstract class BasicMongoDbDao {
     public static void put(String key, String field, String value) {
 
         if (log) {
-            SystemUtils.log(BasicMongoDbDao.class, "Put value " + value + " for " + key);
+            SystemUtils.log("BasicMongoDbDao", "Put value " + value + " for " + key);
         }
 
         Map<String, Object> map = get(key);
@@ -39,7 +41,7 @@ public abstract class BasicMongoDbDao {
     public static void delete(String key) {
 
         if (log) {
-            SystemUtils.log(BasicMongoDbDao.class, "Delete for " + key);
+            SystemUtils.log("BasicMongoDbDao", "Delete for " + key);
         }
 
         database.remove(table, key);
