@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static scotty.util.FacebookUtils.SEND_CLIENT;
+
 public class WozRequestServlet extends HttpServlet {
 
     private static Map toMap(DialogReview review) {
@@ -68,7 +70,7 @@ public class WozRequestServlet extends HttpServlet {
 
                 String facebookId = UserInformationManager.getFacebookId(userId);
                 try {
-                    MessengerServlet.SEND_CLIENT.sendTextMessage(facebookId, reply);
+                    SEND_CLIENT.sendTextMessage(facebookId, reply);
                     DialogHistoryManager.addEntry(userId, "system", reply);
                 } catch (Exception e) {
                     e.printStackTrace();

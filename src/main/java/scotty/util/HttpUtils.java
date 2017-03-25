@@ -97,10 +97,9 @@ public class HttpUtils {
         return result.toString();
     }
 
-    public static String doPostWithParams(String requestURL, HashMap<String, String> postDataParams) {
-
+    public static String doPostWithParams(String requestURL, String params) {
         if (log) {
-            SystemUtils.log("HttpUtils", "Do post request for " + requestURL + " with params " + postDataParams);
+            SystemUtils.log("HttpUtils", "Do post request for " + requestURL + " with params " + params);
         }
 
         URL url;
@@ -118,7 +117,7 @@ public class HttpUtils {
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
+            writer.write(params);
 
             writer.flush();
             writer.close();
@@ -140,6 +139,16 @@ public class HttpUtils {
             e.printStackTrace();
         }
 
+        return response;
+    }
+
+    public static String doPostWithParams(String requestURL, HashMap<String, String> postDataParams) {
+        String response = null;
+        try {
+            response = doPostWithParams(requestURL, getPostDataString(postDataParams));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return response;
     }
 

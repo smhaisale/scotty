@@ -8,8 +8,9 @@ import scotty.manager.UserInformationManager;
 
 import java.util.List;
 
-import static scotty.servlet.MessengerServlet.SEND_CLIENT;
+import static scotty.util.FacebookUtils.SEND_CLIENT;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/woz")
 public class DialogReviewController {

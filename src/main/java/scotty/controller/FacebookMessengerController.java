@@ -1,24 +1,24 @@
 package scotty.controller;
 
 import org.springframework.web.bind.annotation.*;
-import static scotty.servlet.MessengerServlet.RECEIVE_CLIENT;
+import static scotty.util.FacebookUtils.RECEIVE_CLIENT;
 
 @RestController
 @RequestMapping("/webhook")
 public class FacebookMessengerController {
 
     @RequestMapping(method = {RequestMethod.GET})
-    public String verify(@RequestParam(name = "hub.challenge") String challenge) {
+    public String verify(@RequestParam(name = "hub.challenge", defaultValue = "") String challenge) {
         return challenge;
     }
 
     @RequestMapping(method = {RequestMethod.POST})
-    public void message(@RequestBody String payload, @RequestHeader(name = "X-Hub-Signature") String signature) {
-
+    public String message(@RequestBody String payload, @RequestHeader(name = "X-Hub-Signature") String signature) {
         try {
             RECEIVE_CLIENT.processCallbackPayload(payload, signature);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "";  // Required to stop FB from resending the message over and over again.
     }
 }
