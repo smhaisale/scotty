@@ -2,9 +2,11 @@ package scotty.controller;
 
 import org.springframework.web.bind.annotation.*;
 import scotty.common.DialogReview;
+import scotty.common.UserInformation;
+import scotty.dao.UserIdentifierDao;
 import scotty.manager.DialogHistoryManager;
 import scotty.manager.DialogReviewManager;
-import scotty.manager.UserInformationManager;
+import scotty.util.WeChatUtils;
 
 import java.util.List;
 
@@ -28,10 +30,16 @@ public class DialogReviewController {
             if (review != null && !review.getReviewed()) {
                 DialogReviewManager.put(userId, query, reply);
 
-                String facebookId = UserInformationManager.getFacebookId(userId);
+                UserInformation user = UserIdentifierDao.get(userId);
+
                 try {
-                    SEND_CLIENT.sendTextMessage(facebookId, reply);
-                    DialogHistoryManager.addEntry(userId, "system", reply);
+
+                    if (user.getFacebookUserId() != null) {
+                        SEND_CLIENT.sendTextMessage(user.getFacebookUserId(), reply);
+                    } else if (user.getWechatUserId() != null) {
+                        WeChatUtils.sendMessage(user.getWechatUserId(), reply);
+                    }
+                    DialogHistoryManager.addEntry(userId, "woz", reply);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

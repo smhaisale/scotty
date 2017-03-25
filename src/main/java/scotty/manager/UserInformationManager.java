@@ -10,11 +10,9 @@ public class UserInformationManager {
 
     public static String getFacebookId(String userId) {
         UserInformation identifier = UserIdentifierDao.get(userId);
-
         if (identifier == null) {
             return null;
         }
-
         return identifier.getFacebookUserId();
     }
 
