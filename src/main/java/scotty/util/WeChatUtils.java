@@ -30,6 +30,11 @@ public class WeChatUtils {
     }
 
     public static String sendMessage(String wechatId, String text) {
+
+        if (text == null || text.equals("")) {
+            return "";
+        }
+
         String url = SEND_MESSAGE_URL + getAccessToken();
 
         JSONObject content = new JSONObject();

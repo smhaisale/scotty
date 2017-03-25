@@ -33,6 +33,11 @@ public class UserQueryManager {
     public static String getReviewedReply(String userId, String query) {
 
         DialogReview review = DialogReviewManager.review(userId, query, getReply(userId, query), null);
-        return review.getSelectedResponse();
+        if (review.getReviewed()) {
+            // If reviewed, messsage has already been sent via @link{DialogReviewController}.
+            return "";
+        } else {
+            return review.getSelectedResponse();
+        }
     }
 }

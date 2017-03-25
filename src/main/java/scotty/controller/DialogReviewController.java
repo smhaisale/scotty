@@ -33,10 +33,11 @@ public class DialogReviewController {
                 UserInformation user = UserIdentifierDao.get(userId);
 
                 try {
-
                     if (user.getFacebookUserId() != null) {
+                        System.out.println("Sending fb message " + reply + " to " + user.getFacebookUserId());
                         SEND_CLIENT.sendTextMessage(user.getFacebookUserId(), reply);
                     } else if (user.getWechatUserId() != null) {
+                        System.out.println("Sending wechat message " + reply + " to " + user.getWechatUserId());
                         WeChatUtils.sendMessage(user.getWechatUserId(), reply);
                     }
                     DialogHistoryManager.addEntry(userId, "woz", reply);
