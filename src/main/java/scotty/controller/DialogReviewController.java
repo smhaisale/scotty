@@ -20,7 +20,7 @@ public class DialogReviewController {
     @RequestMapping(method = {RequestMethod.GET})
     public List<DialogReview> verify(@RequestParam(defaultValue = "") String userId,
                                      @RequestParam(defaultValue = "") String query,
-                                     @RequestParam(defaultValue = "") String reply) {
+                                     @RequestParam(defaultValue = "") String response) {
         if (userId == null || userId.equals("")) {
             return DialogReviewManager.getAll();
         } else {
@@ -28,19 +28,19 @@ public class DialogReviewController {
             DialogReview review = DialogReviewManager.get(userId);
 
             if (review != null && !review.getReviewed()) {
-                DialogReviewManager.put(userId, query, reply);
+                DialogReviewManager.put(userId, query, response);
 
                 UserInformation user = UserIdentifierDao.get(userId);
 
                 try {
                     if (user.getFacebookUserId() != null) {
-                        System.out.println("Sending fb message " + reply + " to " + user.getFacebookUserId());
-                        SEND_CLIENT.sendTextMessage(user.getFacebookUserId(), reply);
+                        System.out.println("Sending fb message " + response + " to " + user.getFacebookUserId());
+                        SEND_CLIENT.sendTextMessage(user.getFacebookUserId(), response);
                     } else if (user.getWechatUserId() != null) {
-                        System.out.println("Sending wechat message " + reply + " to " + user.getWechatUserId());
-                        WeChatUtils.sendMessage(user.getWechatUserId(), reply);
+                        System.out.println("Sending wechat message " + response + " to " + user.getWechatUserId());
+                        WeChatUtils.sendMessage(user.getWechatUserId(), response);
                     }
-                    DialogHistoryManager.addEntry(userId, "woz", reply);
+                    DialogHistoryManager.addEntry(userId, "woz", response);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
