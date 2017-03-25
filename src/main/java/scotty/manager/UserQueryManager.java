@@ -33,10 +33,6 @@ public class UserQueryManager {
     public static String getReviewedReply(String userId, String query) {
 
         DialogReview review = DialogReviewManager.review(userId, query, getReply(userId, query), null);
-        if (review.getReviewed()) {
-            return "";
-        } else {
-            return review.getSelectedResponse();
-        }
+        return review.getSelectedResponse();
     }
 }
